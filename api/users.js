@@ -1,4 +1,4 @@
-import bd from "./bd.js";
+import bd from "./db.js";
 
 export default function handlerUsers (req, res) {
     const { id } = req.query;
