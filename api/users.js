@@ -1,9 +1,9 @@
-import bd from "./db.js";
+import db from "./db.js";
 
 export default function handlerUsers (req, res) {
     const { id } = req.query;
 
-    const user = bd.users.find((user) => {
+    const user = db.users.find((user) => {
         return user.id == parseInt(id);
     });
 

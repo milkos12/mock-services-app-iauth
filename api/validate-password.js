@@ -1,9 +1,9 @@
-import bd from "./db.js";
+import db from "./db.js";
 export default function handlerPassword(req, res) {
     const { username, password } = req.query;
 
     if (req.method === "POST") {
-        let user = bd.users.find((user) => {
+        let user = db.users.find((user) => {
             return user.username === username && user.password === password;
         });
 
