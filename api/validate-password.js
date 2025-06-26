@@ -1,5 +1,4 @@
-import bd from "./bd";
-
+import bd from "./db.js";
 export default function handlerPassword(req, res) {
     const { username, password } = req.query;
 
