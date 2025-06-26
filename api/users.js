@@ -1,4 +1,4 @@
-const handlerUsers = (req, res) => {
+export default function handlerUsers (req, res) {
     const { id } = req.query;
     const users = [
         { id: 1, name: "Ada Lovelace", role: "Programmer" },
