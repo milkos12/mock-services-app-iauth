@@ -1,12 +1,9 @@
+import bd from "./bd";
+
 export default function handlerUsers (req, res) {
     const { id } = req.query;
-    const users = [
-        { id: 1, name: "Ada Lovelace", role: "Programmer" },
-        { id: 2, name: "Grace Hopper", role: "Admiral" },
-        { id: 3, name: "Margaret Hamilton", role: "Software Engineer" },
-    ]
 
-    const user = users.find((user) => {
+    const user = bd.users.find((user) => {
         return user.id == parseInt(id);
     });
 
