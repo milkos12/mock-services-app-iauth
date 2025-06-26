@@ -1,8 +1,8 @@
 import db from "./db.js";
 export default function handlerPassword(req, res) {
-    const { username, password } = req.query;
 
     if (req.method === "POST") {
+        const { username, password } = req.body;
         let user = db.users.find((user) => {
             return user.username === username && user.password === password;
         });
