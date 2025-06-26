@@ -7,7 +7,7 @@ export default function handlerUsers (req, res) {
     ]
 
     const user = users.find((user) => {
-        return user.id == id;
+        return user.id == parseInt(id);
     });
 
     if (user) {
