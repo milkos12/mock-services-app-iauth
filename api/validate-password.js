@@ -24,11 +24,7 @@ export default async function handlerPassword(req, res) {
             return user.username === username && user.password !== password;
         });
 
-        wrongPassword.numberAttempts = wrongPassword.numberAttempts + 1;
 
-        if (wrongPassword.numberAttempts >= 3) {
-            wrongPassword.isLocked = true;
-        }
 
         await kv.set('users', users);
 
@@ -53,6 +49,11 @@ export default async function handlerPassword(req, res) {
         if (wrongPassword.numberAttempts >= 3) {
             wrongPassword.isLocked = true;
             codeRequest = 429;
+        }
+
+        if (wrongPassword) {
+            json.success = false;
+            wrongPassword.numberAttempts = wrongPassword.numberAttempts + 1;
         }
 
         return res.status(codeRequest).json(json);
