@@ -12,11 +12,11 @@ export default async function handlerPassword (req, res) {
             users = await kv.get('users');
         }
 
-        let user = users.users.find((user) => {
+        let user = users.find((user) => {
             return user.username === username && user.password === password;
         });
 
-        let wrongPassword = users.users.find((user) => {
+        let wrongPassword = users.find((user) => {
             return user.username === username && user.password !== password;
         });
 
@@ -26,7 +26,7 @@ export default async function handlerPassword (req, res) {
             wrongPassword.isLocked = true;
         } 
 
-        await kv.set('users', users.users);
+        await kv.set('users', users);
 
         let json = {
             success: false,

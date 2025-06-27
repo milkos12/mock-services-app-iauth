@@ -11,7 +11,7 @@ export default async function handlerUsers(req, res) {
         users = await kv.get('users');
     }
 
-    const user = users.users.find((user) => {
+    const user = users.find((user) => {
         return user.id == parseInt(id);
     });
 
