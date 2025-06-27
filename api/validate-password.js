@@ -13,10 +13,6 @@ export default async function handlerPassword(req, res) {
         }
 
         let user = users.find((user) => {
-            return user.username === username && user.password === password;
-        });
-
-        user = users.find((user) => {
             return user.username === username;
         });
 
@@ -46,14 +42,14 @@ export default async function handlerPassword(req, res) {
 
         let codeRequest = 200;
 
-        if (wrongPassword.numberAttempts >= 3) {
-            wrongPassword.isLocked = true;
-            codeRequest = 429;
-        }
-
         if (wrongPassword) {
             json.success = false;
             wrongPassword.numberAttempts = wrongPassword.numberAttempts + 1;
+
+            if (wrongPassword.numberAttempts >= 3) {
+                wrongPassword.isLocked = true;
+                codeRequest = 429;
+            }
         }
 
         return res.status(codeRequest).json(json);
