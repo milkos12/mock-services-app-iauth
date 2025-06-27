@@ -20,10 +20,6 @@ export default async function handlerPassword(req, res) {
             return user.username === username && user.password !== password;
         });
 
-
-
-        await kv.set('users', users);
-
         let json = {
             success: false,
             name: "",
@@ -50,13 +46,15 @@ export default async function handlerPassword(req, res) {
                 wrongPassword.isLocked = true;
                 codeRequest = 429;
             }
+
+            users[wrongPassword.id - 1] = wrongPassword;
         }
 
         if(json.numberAttempts  >= 3) {
             json.success = false;
             codeRequest = 429;
         }
-
+        await kv.set('users', users);
         return res.status(codeRequest).json(json);
     }
 
