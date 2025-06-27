@@ -1,6 +1,6 @@
 import db from "./db.js";
 import { kv } from "@vercel/kv";
-export default async function handlerPassword (req, res) {
+export default async function handlerPassword(req, res) {
 
     if (req.method === "POST") {
         const { username, password } = req.body;
@@ -16,6 +16,10 @@ export default async function handlerPassword (req, res) {
             return user.username === username && user.password === password;
         });
 
+        user = users.find((user) => {
+            return user.username === username;
+        });
+
         let wrongPassword = users.find((user) => {
             return user.username === username && user.password !== password;
         });
@@ -24,7 +28,7 @@ export default async function handlerPassword (req, res) {
 
         if (wrongPassword.numberAttempts >= 3) {
             wrongPassword.isLocked = true;
-        } 
+        }
 
         await kv.set('users', users);
 
@@ -38,11 +42,20 @@ export default async function handlerPassword (req, res) {
             json = {
                 success: true,
                 name: user.name,
-                username: user.username
-            } 
+                username: user.username,
+                isLocked: user.isLocked,
+                numberAttempts: user.numberAttempts
+            }
         }
 
-        return res.status(200).json(json);
+        let codeRequest = 200;
+
+        if (wrongPassword.numberAttempts >= 3) {
+            wrongPassword.isLocked = true;
+            codeRequest = 429;
+        }
+
+        return res.status(codeRequest).json(json);
     }
 
     return res.status(404).json({
