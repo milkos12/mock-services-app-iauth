@@ -52,6 +52,10 @@ export default async function handlerPassword(req, res) {
             }
         }
 
+        if(json.numberAttempts  >= 3) {
+            codeRequest = 429;
+        }
+
         return res.status(codeRequest).json(json);
     }
 
