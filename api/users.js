@@ -1,9 +1,12 @@
 import db from "./db.js";
+import { kv } from "@vercel/kv";
 
-export default function handlerUsers (req, res) {
+export default async function handlerUsers (req, res) {
     const { id } = req.query;
 
-    const user = db.users.find((user) => {
+    const users = await kv.get('users');
+
+    const user = users.users.find((user) => {
         return user.id == parseInt(id);
     });
 
