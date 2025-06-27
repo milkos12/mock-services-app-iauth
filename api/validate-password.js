@@ -4,11 +4,19 @@ export default async function handlerPassword (req, res) {
 
     if (req.method === "POST") {
         const { username, password } = req.body;
-        let user = db.users.find((user) => {
+
+        let users = await kv.get('users');
+
+        if (!users) {
+            await kv.set('users', db.users);
+            users = await kv.get('users');
+        }
+
+        let user = users.users.find((user) => {
             return user.username === username && user.password === password;
         });
 
-        let wrongPassword = db.users.find((user) => {
+        let wrongPassword = users.users.find((user) => {
             return user.username === username && user.password !== password;
         });
 
@@ -18,7 +26,7 @@ export default async function handlerPassword (req, res) {
             wrongPassword.isLocked = true;
         } 
 
-        await kv.set('users', db.users);
+        await kv.set('users', users.users);
 
         let json = {
             success: false,
