@@ -1,6 +1,9 @@
 import db from "./db.js";
 import { kv } from "@vercel/kv";
 export default async function handlerPassword(req, res) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
     if (req.method === "POST") {
         const { username, password } = req.body;
@@ -50,7 +53,7 @@ export default async function handlerPassword(req, res) {
             users[wrongPassword.id - 1] = wrongPassword;
         }
 
-        if(json.numberAttempts  >= 3) {
+        if (json.numberAttempts >= 3) {
             json.success = false;
             codeRequest = 429;
         }
