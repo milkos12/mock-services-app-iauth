@@ -26,7 +26,7 @@ export default async function handlerPassword(req, res) {
             await kv.set('users', db.users);
             users = await kv.get('users');
         }
-        
+
         // Encuentra el usuario para verificar si existe y si la contraseña es correcta
         const user = users.find((u) => u.username === username);
 
@@ -34,10 +34,21 @@ export default async function handlerPassword(req, res) {
             // Si el usuario ni siquiera existe, la contraseña es inválida.
             return res.status(202).json({ success: false, message: "User not found." });
         }
-        
+
         // Lógica de intentos y bloqueo
         if (user.isLocked) {
-             return res.status(403).json({ success: false, message: "Account is locked." });
+            const errorResponse = {
+                code: "AUTH_ACCOUNT_LOCKED",
+                message: "Acceso denegado: la cuenta de usuario está bloqueada.",
+                description: "La cuenta ha sido bloqueada por múltiples intentos de inicio de sesión fallidos o por una acción administrativa.",
+                errors: [
+                    "El estado actual de la cuenta es 'bloqueado'."
+                ],
+                helpUrl: "https://ayuda.tu-sitio.com/cuenta-bloqueada",
+                originalCode: originalErrorCodeFromLogic
+            };
+
+            return res.status(403).json(errorResponse);
         }
 
         if (user.password !== password) {
@@ -48,11 +59,11 @@ export default async function handlerPassword(req, res) {
             }
             // Actualizamos la base de datos con los nuevos datos del usuario
             await kv.set('users', users);
-            
+
             if (user.isLocked) {
-                 return res.status(429).json({ success: false, message: "Account locked due to too many failed attempts." });
+                return res.status(429).json({ success: false, message: "Account locked due to too many failed attempts." });
             }
-            
+
             return res.status(202).json({ success: false, message: "Invalid password." });
         }
 
