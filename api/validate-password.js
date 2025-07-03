@@ -45,7 +45,7 @@ export default async function handlerPassword(req, res) {
                     "El estado actual de la cuenta es 'bloqueado'."
                 ],
                 helpUrl: "https://ayuda.tu-sitio.com/cuenta-bloqueada",
-                originalCode: originalErrorCodeFromLogic
+                originalCode: 403
             };
 
             return res.status(403).json(errorResponse);
