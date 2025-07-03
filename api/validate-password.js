@@ -37,7 +37,7 @@ export default async function handlerPassword(req, res) {
         
         // Lógica de intentos y bloqueo
         if (user.isLocked) {
-             return res.status(202).json({ success: false, message: "Account is locked." });
+             return res.status(403).json({ success: false, message: "Account is locked." });
         }
 
         if (user.password !== password) {
